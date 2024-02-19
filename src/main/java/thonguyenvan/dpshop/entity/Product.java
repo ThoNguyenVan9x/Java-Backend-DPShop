@@ -19,10 +19,16 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private Double price;
+    private String material;
 
     @Column(nullable = false)
-    private String image;
+    private String size;;
+
+    @Column(nullable = false)
+    private Double price;
+
+//    @Column(nullable = false)
+    private String image = "/assets/images/product-1.png";
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

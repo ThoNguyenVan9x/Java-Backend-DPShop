@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import thonguyenvan.dpshop.dto.ProductDTO;
+import thonguyenvan.dpshop.entity.Product;
 import thonguyenvan.dpshop.service.product.ProductService;
 
 @RestController
@@ -27,5 +28,10 @@ public class ProductApi {
     @GetMapping("/{id}")
     public ProductDTO getDetailProduct(@PathVariable Integer id) {
         return productService.getDetailProduct(id);
+    }
+
+    @PostMapping
+    public Product AddNewProduct(@RequestBody Product product) {
+       return productService.addNewProduct(product);
     }
 }

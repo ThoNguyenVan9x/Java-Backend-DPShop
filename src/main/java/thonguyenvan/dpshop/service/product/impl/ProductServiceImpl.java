@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import thonguyenvan.dpshop.dto.ProductDTO;
+import thonguyenvan.dpshop.entity.Product;
 import thonguyenvan.dpshop.repository.product.ProductRepository;
 import thonguyenvan.dpshop.service.product.ProductService;
 
@@ -24,5 +26,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO getDetailProduct(Integer id) {
         return productRepository.getProductById(id);
+    }
+
+    @Override
+    @Transactional
+    public Product addNewProduct(Product product) {
+        return productRepository.save(product);
     }
 }

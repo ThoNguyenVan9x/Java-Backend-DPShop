@@ -16,6 +16,10 @@ public class ProductDTO{
 
     private String name;
 
+    private String material;
+
+    private String size;;
+
     private Double price;
 
     private String image;
