@@ -12,4 +12,6 @@ public interface ProductService {
     ProductDTO getDetailProduct(Integer id);
 
     Product addNewProduct(Product product);
+
+    Product updateProduct(Product product);
 }

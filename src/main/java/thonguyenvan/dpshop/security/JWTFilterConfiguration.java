@@ -17,5 +17,8 @@ public class JWTFilterConfiguration extends
         JWTFilter jwtFilter = new JWTFilter(tokenProvider);
         builder.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+
     }
+
+
 }

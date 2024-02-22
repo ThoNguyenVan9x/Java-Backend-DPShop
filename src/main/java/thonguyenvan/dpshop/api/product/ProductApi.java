@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thonguyenvan.dpshop.dto.ProductDTO;
 import thonguyenvan.dpshop.entity.Product;
@@ -16,7 +17,7 @@ public class ProductApi {
 
     private final ProductService productService;
 
-    @GetMapping
+    @GetMapping("/list")
     public Page<ProductDTO> getListProduct(@RequestParam(defaultValue = "0",required = false, value="pageIndex") Integer pageIndex,
                                            @RequestParam(defaultValue = "8", required = false, value="pageSize") Integer pageSize,
                                            @RequestParam(required = false, value="searchType") String searchType,
@@ -25,13 +26,19 @@ public class ProductApi {
         return productService.getProductList(search, searchType, pageable);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ProductDTO getDetailProduct(@PathVariable Integer id) {
         return productService.getDetailProduct(id);
     }
 
-    @PostMapping
-    public Product AddNewProduct(@RequestBody Product product) {
+    @PostMapping("/add")
+    public Product addNewProduct(@RequestBody Product product) {
        return productService.addNewProduct(product);
+    }
+
+    @PutMapping("/edit")
+    public Product updateProduct(@RequestBody Product product) {
+        System.out.println( "product id: " + product.getId());
+        return productService.updateProduct(product);
     }
 }

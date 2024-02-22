@@ -15,10 +15,10 @@ spring:
     defer-datasource-initialization: true
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   sql:
     init:
-      mode: always
+      mode: embedded
   servlet:
     multipart:
       max-file-size: 10MB
