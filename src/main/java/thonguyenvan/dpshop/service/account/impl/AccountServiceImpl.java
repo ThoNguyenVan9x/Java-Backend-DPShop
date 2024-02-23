@@ -20,4 +20,19 @@ public class AccountServiceImpl implements AccountService {
     public Optional<Account> getAccountByUsername(String username) {
         return accountRepository.findByUsername(username);
     }
+
+    @Override
+    public Optional<Account> getAccountByEmail(String email) {
+        return accountRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Account> getAccountByPhone(String phone) {
+        return accountRepository.findByPhone(phone);
+    }
+
+    @Override
+    public Account addAccount(Account account) {
+        return accountRepository.save(account);
+    }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import thonguyenvan.dpshop.enums.ProductEnum;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -28,9 +30,17 @@ public class Product {
     private Double price;
 
 //    @Column(nullable = false)
+    private Integer discount;
+
+//    @Column(nullable = false)
     private String image = "/assets/images/product-1.png";
+
+    private Integer rating;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProductEnum type;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
 }

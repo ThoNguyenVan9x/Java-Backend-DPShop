@@ -32,7 +32,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/register").permitAll()
                         .requestMatchers("/api/products/list").permitAll()
+                        .requestMatchers("/api/order").permitAll()
                         .requestMatchers("/api/products/detail/**").permitAll()
                         .requestMatchers("/api/products/add").hasRole(Role.ADMIN.name())
                         .requestMatchers("/api/products/edit").hasRole(Role.ADMIN.name())

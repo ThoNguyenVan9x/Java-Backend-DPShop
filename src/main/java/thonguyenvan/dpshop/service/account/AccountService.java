@@ -8,4 +8,10 @@ import java.util.Optional;
 public interface AccountService {
 
     Optional<Account> getAccountByUsername(String username);
+
+    Optional<Account> getAccountByEmail(String email);
+
+    Optional<Account> getAccountByPhone(String phone);
+
+    Account addAccount(Account account);
 }

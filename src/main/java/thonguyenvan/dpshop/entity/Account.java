@@ -32,5 +32,5 @@ public class Account {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;
 }

@@ -29,6 +29,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Optional<Product> getProductById(Integer id) {
+        return productRepository.findById(id);
+    }
+
+    @Override
     @Transactional
     public Product addNewProduct(Product product) {
         return productRepository.save(product);
