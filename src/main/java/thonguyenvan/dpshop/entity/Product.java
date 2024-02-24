@@ -17,25 +17,25 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String material;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String size;;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double price;
 
 //    @Column(nullable = false)
-    private Integer discount;
+    private Integer discount = 0;
 
 //    @Column(nullable = false)
     private String image = "/assets/images/product-1.png";
 
-    private Integer rating;
+    private Integer rating = 0;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

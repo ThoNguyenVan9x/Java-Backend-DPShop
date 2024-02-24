@@ -21,9 +21,18 @@ public class ProductApi {
     public Page<ProductDTO> getListProduct(@RequestParam(defaultValue = "0",required = false, value="pageIndex") Integer pageIndex,
                                            @RequestParam(defaultValue = "8", required = false, value="pageSize") Integer pageSize,
                                            @RequestParam(required = false, value="searchType") String searchType,
-                                           @RequestParam(required = false, value="search") String search) {
+                                           @RequestParam(required = false, value="searchText") String searchText) {
+        System.out.println("search type: " + searchType);
+        System.out.println("search text: " + searchText);
+        if(searchText == "") searchText = null;
+        if(searchType == "") searchType = null;
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return productService.getProductList(search, searchType, pageable);
+        if(searchText == null && searchType == null){
+            System.out.println("chay vao case 2 null");
+            return productService.getProductList(pageable);
+        }
+        System.out.println("chay vao case 1 or 0 null");
+        return productService.getProductList(searchText, searchType, pageable);
     }
 
     @GetMapping("/detail/{id}")
@@ -33,6 +42,11 @@ public class ProductApi {
 
     @PostMapping("/add")
     public Product addNewProduct(@RequestBody Product product) {
+        System.out.println("chạy vào đây rồi!");
+        System.out.println("product: " + product.getId());
+        System.out.println("product: " + product.getName());
+        System.out.println("product: " + product.getMaterial());
+        System.out.println("product: " + product.getPrice());
        return productService.addNewProduct(product);
     }
 

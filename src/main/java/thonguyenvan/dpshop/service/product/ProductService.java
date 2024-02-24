@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Page<ProductDTO> getProductList(String search, String searchType, Pageable pageable);
+    Page<ProductDTO> getProductList(String searchText, String searchType, Pageable pageable);
+
+    Page<ProductDTO> getProductList(Pageable pageable);
 
     ProductDTO getDetailProduct(Integer id);
 
