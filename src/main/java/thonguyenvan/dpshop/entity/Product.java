@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import thonguyenvan.dpshop.enums.ProductEnum;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -28,6 +31,8 @@ public class Product {
 
 //    @Column(nullable = false)
     private Double price;
+
+    private Integer countInStock = 100;
 
 //    @Column(nullable = false)
     private Integer discount = 0;

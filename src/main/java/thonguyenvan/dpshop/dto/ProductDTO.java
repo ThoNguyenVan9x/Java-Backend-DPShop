@@ -22,6 +22,12 @@ public class ProductDTO{
 
     private Double price;
 
+    private Integer countInStock;
+
+    private Integer discount;
+
+    private Integer rating;
+
     private String image;
 
     private ProductEnum type;

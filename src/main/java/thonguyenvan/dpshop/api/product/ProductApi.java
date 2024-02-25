@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thonguyenvan.dpshop.dto.ProductDTO;
@@ -37,22 +38,24 @@ public class ProductApi {
 
     @GetMapping("/detail/{id}")
     public ProductDTO getDetailProduct(@PathVariable Integer id) {
+        System.out.println("chay vao detail");
         return productService.getDetailProduct(id);
     }
 
     @PostMapping("/add")
     public Product addNewProduct(@RequestBody Product product) {
-        System.out.println("chạy vào đây rồi!");
-        System.out.println("product: " + product.getId());
-        System.out.println("product: " + product.getName());
-        System.out.println("product: " + product.getMaterial());
-        System.out.println("product: " + product.getPrice());
-       return productService.addNewProduct(product);
+        return productService.addNewProduct(product);
     }
 
     @PutMapping("/edit")
     public Product updateProduct(@RequestBody Product product) {
         System.out.println( "product id: " + product.getId());
         return productService.updateProduct(product);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("ok");
     }
 }

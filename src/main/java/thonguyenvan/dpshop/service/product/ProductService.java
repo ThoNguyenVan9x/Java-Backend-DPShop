@@ -20,4 +20,6 @@ public interface ProductService {
     Product addNewProduct(Product product);
 
     Product updateProduct(Product product);
+
+    void deleteProduct(Integer id);
 }
