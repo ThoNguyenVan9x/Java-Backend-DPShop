@@ -1,6 +1,9 @@
 package thonguyenvan.dpshop.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
@@ -52,8 +55,8 @@ public class ProductController {
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         System.out.println("day chay vao ham get all");
         // tao Pageable tu thong tin trang va gioi han
-        // PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
+         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
+//        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
         Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
         // lay tong so trang(total page)
         int totalPages = productPage.getTotalPages();
@@ -76,10 +79,30 @@ public class ProductController {
 
     @Transactional
     @PostMapping(value = "")
-    public ResponseEntity<?> insertProduct(@RequestBody @Valid ProductDTO productDTO,
-                                            BindingResult result) {
-        System.out.println("product: " + productDTO);
-//        try {
+    public ResponseEntity<?> insertProduct(
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("object") String object)  {
+//        System.out.println("image: " + image);
+//        System.out.println("object: " + object);
+//        System.out.println("content type: " + request.getContentType());
+//
+//        ProductDTO productDTO = new ProductDTO();
+//        ObjectMapper mapper = new ObjectMapper();
+//        productDTO = mapper.readValue(object, ProductDTO.class);
+//
+//        System.out.println("product dto before: " + productDTO);
+//        String thumbnailUrl = storeFile(image);
+//        productDTO.setThumbnail(thumbnailUrl);
+//        System.out.println("product dto after: " + productDTO);
+
+        try {
+            ProductDTO productDTO = new ProductDTO();
+            ObjectMapper mapper = new ObjectMapper();
+            productDTO = mapper.readValue(object, ProductDTO.class);
+            String thumbnailUrl = storeFile(image);
+            productDTO.setThumbnail(thumbnailUrl);
+            Product newProduct = productService.createProduct(productDTO);
+
 //            if(result.hasErrors()) {
 //                List<String> errorMessages = result.getFieldErrors()
 //                        .stream()
@@ -87,15 +110,41 @@ public class ProductController {
 //                        .toList();
 //                return ResponseEntity.badRequest().body(errorMessages);
 //            }
+//            String thumbnailUrl = storeFile(productDTO.getThumbnail());
+//            productDTO.setThumbnailUrl(thumbnailUrl);
 //            Product newProduct = productService.createProduct(productDTO);
-//
-//
-//            return ResponseEntity.ok(newProduct);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-        return null;
+
+
+            return ResponseEntity.ok(newProduct);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+//        return null;
     }
+
+
+    @Transactional
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateProduct(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam("object") String object)  {
+        try {
+            ProductDTO productDTO = new ProductDTO();
+            ObjectMapper mapper = new ObjectMapper();
+            productDTO = mapper.readValue(object, ProductDTO.class);
+            if (image != null) {
+                String thumbnailUrl = storeFile(image);
+                productDTO.setThumbnail(thumbnailUrl);
+            }
+            Product newProduct = productService.updateProduct(id, productDTO);
+
+            return ResponseEntity.ok(newProduct);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     @GetMapping("images/{imageName}")
     public ResponseEntity<?> viewImage(@PathVariable String imageName) {

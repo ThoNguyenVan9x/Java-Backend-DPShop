@@ -14,11 +14,13 @@ public interface IProductService {
 
     Product createProduct(ProductDTO productDTO) throws DataNotFoundException;
 
+    Product updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException;
+
     Product getProductById(long id) throws DataNotFoundException;
 
     Page<ProductResponse> getAllProducts(String keyword, Long categoryId, PageRequest pageRequest);
 
-    Product updateProduct(long id, ProductDTO productDTO) throws DataNotFoundException;
+//    Product updateProduct(long id, ProductDTO productDTO) throws DataNotFoundException;
 
     void deleteProduct(long id);
 

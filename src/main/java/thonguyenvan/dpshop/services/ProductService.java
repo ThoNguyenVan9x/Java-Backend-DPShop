@@ -32,12 +32,29 @@ public class ProductService implements IProductService{
         Product product = Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
-//                .thumbnail(productDTO.getThumbnail())
+                .thumbnail(productDTO.getThumbnail())
                 .category(existingCategory)
                 .description(productDTO.getDescription())
 
                 .build();
         return productRepository.save(product);
+    }
+
+    @Override
+    public Product updateProduct(Long id, ProductDTO productDTO) throws DataNotFoundException {
+        Product existProduct = productRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Can not find category with id = " + id));
+        Category existingCategory =  categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new DataNotFoundException(
+                        "Can not find category with id = " + productDTO.getCategoryId()));
+        if (productDTO.getThumbnail() != null) {
+            existProduct.setThumbnail(productDTO.getThumbnail());
+        }
+        existProduct.setName(productDTO.getName());
+        existProduct.setPrice(productDTO.getPrice());
+        existProduct.setDescription(productDTO.getDescription());
+        existProduct.setCategory(existingCategory);
+        return productRepository.save(existProduct);
     }
 
     @Override
@@ -52,24 +69,24 @@ public class ProductService implements IProductService{
         return productRepository.findAll(keyword, categoryId, pageRequest).map(ProductResponse::fromProduct);
     }
 
-    @Override
-    public Product updateProduct(long id, ProductDTO productDTO) throws DataNotFoundException {
-        Product existingProduct = getProductById(id);
-        if (existingProduct != null) {
-            // copy cac thuoc tinh tu dto => product.
-            // co the su dung modelMapper
-            existingProduct.setName(productDTO.getName());
-            Category existingCategory =  categoryRepository.findById(productDTO.getCategoryId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Can not find category with id = " + productDTO.getCategoryId()));
-            existingProduct.setCategory(existingCategory);
-            existingProduct.setPrice(productDTO.getPrice());
-            existingProduct.setDescription(productDTO.getDescription());
-//            existingProduct.setThumbnail(productDTO.getThumbnail());
-            return productRepository.save(existingProduct);
-        }
-        return null;
-    }
+//    @Override
+//    public Product updateProduct(long id, ProductDTO productDTO) throws DataNotFoundException {
+//        Product existingProduct = getProductById(id);
+//        if (existingProduct != null) {
+//            // copy cac thuoc tinh tu dto => product.
+//            // co the su dung modelMapper
+//            existingProduct.setName(productDTO.getName());
+//            Category existingCategory =  categoryRepository.findById(productDTO.getCategoryId())
+//                    .orElseThrow(() -> new DataNotFoundException(
+//                            "Can not find category with id = " + productDTO.getCategoryId()));
+//            existingProduct.setCategory(existingCategory);
+//            existingProduct.setPrice(productDTO.getPrice());
+//            existingProduct.setDescription(productDTO.getDescription());
+////            existingProduct.setThumbnail(productDTO.getThumbnail());
+//            return productRepository.save(existingProduct);
+//        }
+//        return null;
+//    }
 
     @Override
     public void deleteProduct(long id) {

@@ -23,7 +23,7 @@ public class ProductDTO {
     @Max(value = 10000000, message = "Price must be less than or equal to 10,000,000")
     private Float price;
 
-    private MultipartFile thumbnail;
+    private String thumbnail;
 
     private String description;
 
