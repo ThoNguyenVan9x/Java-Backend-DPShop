@@ -22,8 +22,9 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
-    @Value("${app.token.signingKey}")
+    @Value("${jwt.secretKey}")
     private String signingKey;
+
     public String generateAccessToken(Authentication authentication){
         String role = authentication.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
