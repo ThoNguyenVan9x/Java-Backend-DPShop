@@ -1,7 +1,12 @@
 package thonguyenvan.dpshop.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -9,9 +14,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import thonguyenvan.dpshop.components.LocalizationUtils;
 import thonguyenvan.dpshop.dtos.OrderDTO;
+import thonguyenvan.dpshop.models.Order;
+import thonguyenvan.dpshop.responses.OrderListResponse;
 import thonguyenvan.dpshop.responses.OrderResponse;
 import thonguyenvan.dpshop.services.IOrderService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,11 +28,14 @@ import java.util.List;
 public class OrderController {
     private final IOrderService orderService;
     private final LocalizationUtils localizationUtils;
+    private final ModelMapper modelMapper;
 
     @Transactional
     @PostMapping("")
     public ResponseEntity<?> createOrder(@RequestBody @Valid OrderDTO orderDTO,
-                                         BindingResult result) {
+                                         BindingResult result, HttpServletRequest request) {
+        System.out.println("object: " + orderDTO.toString());
+        System.out.println("content type: " + request.getContentType());
         try {
             if(result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -38,6 +49,31 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+//        return null;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllOrders(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").descending());
+        Page<Order> orderPage = orderService.getListOrders(keyword, pageRequest);
+        int totalPages = orderPage.getTotalPages();
+        List<Order> orders = orderPage.getContent();
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        modelMapper.typeMap(Order.class, OrderResponse.class);
+
+        for(Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse();
+            modelMapper.map(order, orderResponse);
+            orderResponses.add(orderResponse);
+        }
+        return ResponseEntity.ok(OrderListResponse.builder()
+                        .orderResponses(orderResponses)
+                        .totalPages(totalPages)
+                .build());
     }
 
     @GetMapping("/user/{user_id}")

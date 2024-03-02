@@ -55,7 +55,7 @@ public class ProductController {
             @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         System.out.println("day chay vao ham get all");
         // tao Pageable tu thong tin trang va gioi han
-         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
+         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").descending());
 //        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("id").ascending());
         Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
         // lay tong so trang(total page)
@@ -245,29 +245,29 @@ public class ProductController {
         return ResponseEntity.ok(String.format("Deleted successfully product with id = %d", id));
     }
 
-//    @Transactional
-//    @PostMapping("/generateFakeProducts")
-//    public ResponseEntity<String> generateFakeProducts() {
-//        Faker faker = new Faker();
-//        for (int i = 0; i < 1000; i++) {
-//            String productName = faker.commerce().productName();
-//            if (productService.existsByName(productName)) {
-//                continue;
-//            }
-//            ProductDTO productDTO = ProductDTO.builder()
-//                    .name(productName)
-//                    .price((float) faker.number().numberBetween(0, 90000000))
-//                    .thumbnail("")
-//                    .description(faker.lorem().sentence())
-//                    .categoryId((long) faker.number().numberBetween(1, 4))
-//                    .build();
-//            try {
-//                productService.createProduct(productDTO);
-//            } catch (DataNotFoundException e) {
-//                return ResponseEntity.badRequest().body(e.getMessage());
-//            }
-//        }
-//        return ResponseEntity.ok("Fake Products created successfully");
-//    }
+    @Transactional
+    @PostMapping("/generateFakeProducts")
+    public ResponseEntity<String> generateFakeProducts() {
+        Faker faker = new Faker();
+        for (int i = 0; i < 1000; i++) {
+            String productName = faker.commerce().productName();
+            if (productService.existsByName(productName)) {
+                continue;
+            }
+            ProductDTO productDTO = ProductDTO.builder()
+                    .name(productName)
+                    .price((float) faker.number().numberBetween(0, 90000000))
+                    .thumbnail("")
+                    .description(faker.lorem().sentence())
+                    .categoryId((long) faker.number().numberBetween(1, 8))
+                    .build();
+            try {
+                productService.createProduct(productDTO);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+        return ResponseEntity.ok("Fake Products created successfully");
+    }
 
 }

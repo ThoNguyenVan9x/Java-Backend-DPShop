@@ -2,13 +2,16 @@ package thonguyenvan.dpshop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import thonguyenvan.dpshop.dtos.CartItemDTO;
 import thonguyenvan.dpshop.dtos.OrderDTO;
 import thonguyenvan.dpshop.exeptions.DataNotFoundException;
-import thonguyenvan.dpshop.models.Order;
-import thonguyenvan.dpshop.models.OrderStatus;
-import thonguyenvan.dpshop.models.User;
+import thonguyenvan.dpshop.models.*;
+import thonguyenvan.dpshop.repositories.OrderDetailRepository;
 import thonguyenvan.dpshop.repositories.OrderRepository;
+import thonguyenvan.dpshop.repositories.ProductRepository;
 import thonguyenvan.dpshop.repositories.UserRepository;
 import thonguyenvan.dpshop.responses.OrderResponse;
 
@@ -22,6 +25,9 @@ public class OrderService implements IOrderService{
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
+
     @Override
     public OrderResponse createOrder(OrderDTO orderDTO) throws DataNotFoundException {
         // tim xem user id co ton tai hay khong
@@ -45,10 +51,33 @@ public class OrderService implements IOrderService{
         }
         order.setShippingDate(shippingDate);
         order.setActive(true);
+        order.setTotalMoney(orderDTO.getTotalMoney());
         orderRepository.save(order);
         OrderResponse orderResponse = new OrderResponse();
         modelMapper.typeMap(Order.class, OrderResponse.class);
         modelMapper.map(order, orderResponse);
+        // tao danh sach cac doi tuong OrderDetail tu CartItems
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
+            // tao mot doi tuong OrderDetail tu CartItemDTO
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            // lay thong tin san pham tu CartItemDTO
+            Long productId = cartItemDTO.getProductId();
+            Long quantity = cartItemDTO.getQuantity();
+            // tim thong tin san pham tu co so du lieu (hoac su dung cache neu can)
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new DataNotFoundException("Cannot find Product with id = " + productId));
+            // dat thong tin cho OrderDetail
+            orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(quantity);
+            // cac truong khac cua OrderDetail neu can
+            orderDetail.setPrice(product.getPrice());
+            // them OrderDetail vao danh sach
+            orderDetails.add(orderDetail);
+        }
+        // luu danh sach OrderDetail vao database.
+        orderDetailRepository.saveAll(orderDetails);
         return orderResponse;
     }
 
@@ -108,5 +137,10 @@ public class OrderService implements IOrderService{
             orderResponses.add(orderResponse);
         }
         return orderResponses;
+    }
+
+    @Override
+    public Page<Order> getListOrders(String keyword, PageRequest pageRequest) {
+        return orderRepository.findAllListOrders(keyword, pageRequest);
     }
 }

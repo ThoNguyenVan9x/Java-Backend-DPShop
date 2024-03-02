@@ -16,7 +16,7 @@ public class OrderResponse extends BaseResponse{
     private Long id;
 
     @JsonProperty("user_id")
-    private User user;
+    private Long userId;
 
     @JsonProperty("fullname")
     private String fullName;
