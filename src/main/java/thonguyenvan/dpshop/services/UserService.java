@@ -28,8 +28,6 @@ public class UserService implements IUserServices{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-//    private final JwtTokenUtils jwtTokenUtils;
-//    private final AuthenticationManager authenticationManager;
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         String phoneNumber = userDTO.getPhoneNumber();
@@ -51,7 +49,7 @@ public class UserService implements IUserServices{
                 .password(userDTO.getPassword())
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
-                .googleAccountId(userDTO.getFacebookAccountId())
+                .googleAccountId(userDTO.getGoogleAccountId())
                 .active(true)
                 .build();
 
@@ -69,6 +67,11 @@ public class UserService implements IUserServices{
     public User findByPhoneNumber(String phoneNumber) throws DataNotFoundException {
         return userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find User with phone number = " + phoneNumber));
+    }
+
+    @Override
+    public Optional<User> findByPhoneNumberSocial(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
     @Override

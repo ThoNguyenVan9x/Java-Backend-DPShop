@@ -30,9 +30,28 @@ spring:
     basename: i18n/messages
     encoding: utf-8
     default-locale: en
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 98942692648-tru7ad3vfhl5p366db2kv7sdtm3q2oso.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid,profile,email
+          github:
+            client-id: f37e8e13a00e55c8b3d6
+            client-secret: 3963376253a08954a446c220eacfb4f76c16df16
+            scope: profile,email
+
+
+
+
 api:
   prefix: api/v1
 jwt:
   expiration: 2592000
   secretKey: newKey1996
+frontend:
+  url: http://localhost:3000/token/
+
 

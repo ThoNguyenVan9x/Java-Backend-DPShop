@@ -6,3 +6,8 @@ INSERT INTO product(name,material, size, price, discount, image, rating, type)
 VALUES
     ("Ghế phòng ngủ", "Gỗ thông", "123 x 340 x 250", 1000000, 150,  "/assets/images/product-1.png", 4,  "CHAIR"),
     ("Giuong", "Gỗ mun", "123 x 340 x 250", 2000000, 550,  "/assets/images/product-2.png", 4,  "BED");
+
+
+-- #google:
+-- Client ID: 98942692648-alc65fm7g5ge8r1kpt0mrdb086mltok8.apps.googleusercontent.com
+-- Client secret: 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

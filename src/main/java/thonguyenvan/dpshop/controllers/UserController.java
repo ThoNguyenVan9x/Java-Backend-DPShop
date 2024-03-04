@@ -47,6 +47,8 @@ public class UserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())) {
                 return ResponseEntity.badRequest().body(localizationUtils.getLocalizedMessage(MessageKeys.PASSWORD_NOT_MATCH));
             }
+            userDTO.setFacebookAccountId(0);
+            userDTO.setGoogleAccountId(0);
             User user = userService.createUser(userDTO);
 
             return ResponseEntity.ok(RegisterResponse.builder()
